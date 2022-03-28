@@ -78,9 +78,16 @@ public class PhysicsCarController : MonoBehaviour
                 if(hit.collider.CompareTag("car"))
                 {
                     Debug.Log("RAYCAST HIT A CAR!!!");
-                    Vector3 position = hit.rigidbody.position;
+                    Vector3 position = hit.point;
 
-                    hit.rigidbody.AddExplosionForce(500, position, 15, 10);
+                    GameObject[] cars = GameObject.FindGameObjectsWithTag("car");
+                    foreach(GameObject car in cars)
+                    {
+                        Rigidbody rb = car.GetComponent<Rigidbody>();
+                        rb.AddExplosionForce(500, position, 15, 10);
+                    }
+                    //hit.rigidbody.AddExplosionForce(500, position, 15, 10);
+                    //Destroy(hit.collider.gameObject);
                 }
             }
         }
