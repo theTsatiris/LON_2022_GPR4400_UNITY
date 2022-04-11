@@ -5,6 +5,15 @@ using UnityEngine.AI;
 
 public class SmartAgentController : MonoBehaviour
 {
+    enum NPCState
+    {
+        Patrol,
+        Chase,
+        Return
+    }
+
+    private NPCState currentState;
+
     [SerializeField]
     Transform pointA;
     [SerializeField]
@@ -24,8 +33,6 @@ public class SmartAgentController : MonoBehaviour
 
     bool onPatrol;
 
-    bool switched;
-
     Vector3 lastPatrolPosition;
 
     // Start is called before the first frame update
@@ -33,47 +40,32 @@ public class SmartAgentController : MonoBehaviour
     {
         onPatrol = true;
 
-        switched = false;
-
         nav = GetComponent<NavMeshAgent>();
 
         float halfFoV = fieldOfView / 2.0f;
         detectionCosine = Mathf.Cos(Mathf.Deg2Rad * halfFoV);
+
+        lastPatrolPosition = transform.position;
+
+        currentState = NPCState.Patrol;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(CheckEngagement()) // CHASING MODE
+        switch(currentState)
         {
-            onPatrol = false;
-            lastPatrolPosition = transform.position;
-            nav.SetDestination(target.position);
-        }
-        else
-        {
-            if(onPatrol) // PATROL/IDLE MODE
-            {
-                //TODO!!!!!!!!
-                //if(Vector3.Distance(transform.position, pointA.position) <= 1.0f)
-                //{
-                //    Debug.Log("DEST: POINT B");
-                //    nav.SetDestination(pointB.position);
-                //}
-                //else
-                //{
-                //    Debug.Log("DEST: POINT A");
-                //    nav.SetDestination(pointA.position);
-                //}
-            }
-            else // RETURN TO PATROL MODE
-            {
-                nav.SetDestination(lastPatrolPosition);
-                if(Vector3.Distance(transform.position, lastPatrolPosition) <= 1.0f)
-                {
-                    onPatrol = true;
-                }
-            }
+            case NPCState.Patrol:
+                DoPatrol();
+                break;
+            case NPCState.Chase:
+                DoChase();
+                break;
+            case NPCState.Return:
+                DoReturn();
+                break;
+            default:
+                break;
         }
     }
 
@@ -92,6 +84,45 @@ public class SmartAgentController : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    void DoPatrol()
+    {
+        if (Vector3.Distance(transform.position, pointA.position) <= 1.0f)
+        {
+            Debug.Log("DEST: POINT B");
+            nav.SetDestination(pointB.position);
+        }
+        if (Vector3.Distance(transform.position, pointB.position) <= 1.0f)
+        {
+            Debug.Log("DEST: POINT A");
+            nav.SetDestination(pointA.position);
+        }
+    }
+
+    void DoChase()
+    {
+        if (onPatrol)
+        {
+            lastPatrolPosition = transform.position;
+        }
+        onPatrol = false;
+        nav.SetDestination(target.position);
+    }
+
+    void DoReturn()
+    {
+        nav.SetDestination(lastPatrolPosition);
+        if (Vector3.Distance(transform.position, lastPatrolPosition) <= 1.0f)
+        {
+            onPatrol = true;
+            float distanceA = Vector3.Distance(lastPatrolPosition, pointA.position);
+            float distanceB = Vector3.Distance(lastPatrolPosition, pointB.position);
+            if (distanceA <= distanceB)
+                nav.SetDestination(pointA.position);
+            else
+                nav.SetDestination(pointB.position);
         }
     }
 }

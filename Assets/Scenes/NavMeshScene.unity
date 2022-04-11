@@ -745,7 +745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2570411223448875173, guid: 8a98e179a1a86684591fbfe952f794e7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.28
+      value: -12
       objectReference: {fileID: 0}
     - target: {fileID: 2570411223448875173, guid: 8a98e179a1a86684591fbfe952f794e7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -753,7 +753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2570411223448875173, guid: 8a98e179a1a86684591fbfe952f794e7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.16
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 2570411223448875173, guid: 8a98e179a1a86684591fbfe952f794e7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1018,8 +1018,8 @@ MonoBehaviour:
   pointA: {fileID: 1994225268}
   pointB: {fileID: 929242122}
   target: {fileID: 258283596}
-  detectionDist: 10
-  fieldOfView: 90
+  detectionDist: 20
+  fieldOfView: 180
 --- !u!1 &1019026545
 GameObject:
   m_ObjectHideFlags: 0
