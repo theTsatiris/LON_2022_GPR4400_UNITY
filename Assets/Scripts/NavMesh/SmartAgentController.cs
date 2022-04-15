@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum NPCState
+{
+    Patrol,
+    Chase,
+    Return
+}
+
 public class SmartAgentController : MonoBehaviour
 {
-    enum NPCState
-    {
-        Patrol,
-        Chase,
-        Return
-    }
-
-    private NPCState currentState;
+    [HideInInspector]
+    public NPCState currentState;
 
     [SerializeField]
     Transform pointA;
@@ -53,6 +54,7 @@ public class SmartAgentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //UpdateState();
         switch(currentState)
         {
             case NPCState.Patrol:
@@ -85,6 +87,35 @@ public class SmartAgentController : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public bool UpdateState(NPCState candidateState)
+    {
+        switch (candidateState)
+        {
+            case NPCState.Chase:
+                if (((currentState == NPCState.Patrol) || (currentState == NPCState.Return)) && CheckEngagement())
+                {
+                    return true;
+                }
+                break;
+            case NPCState.Patrol:
+                if((currentState == NPCState.Return) && onPatrol)
+                {
+                    return true;
+                }
+                break;
+            case NPCState.Return:
+                if(currentState == NPCState.Chase && !CheckEngagement())
+                {
+                    return true;
+                }
+                break;
+            default:
+                break;
+        }
+
+        return false;
     }
 
     void DoPatrol()
