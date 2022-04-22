@@ -10,11 +10,16 @@ public class HeightMap
     public int height;
     public float scale;
 
-    public void GenerateHeightMap(int width, int height, float scale)
+    public float x_offset;
+    public float y_offset;
+
+    public void GenerateHeightMap(int width, int height, float scale, float x_offset, float y_offset)
     {
         this.width = width;
         this.height = height;
         this.scale = scale;
+        this.x_offset = x_offset;
+        this.y_offset = y_offset;
 
         this.map = new float[this.width, this.height];
 
@@ -33,8 +38,8 @@ public class HeightMap
 
     float CalculatePerlinNoise(int x, int y)
     {
-        float x_coord = ((float)x / width) * scale; 
-        float y_coord = ((float)y / height) * scale;
+        float x_coord = ((float)x / width) * scale + x_offset; 
+        float y_coord = ((float)y / height) * scale + y_offset;
 
         return Mathf.PerlinNoise(x_coord, y_coord);
     }
